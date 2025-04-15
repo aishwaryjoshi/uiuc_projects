@@ -142,3 +142,34 @@ resource "aws_lambda_event_source_mapping" "ddb_to_lambda" {
   function_name     = aws_lambda_function.offer_generator.arn
   starting_position = "LATEST"
 }
+
+# Glue Database
+resource "aws_glue_catalog_database" "offers_db" {
+  name = "offers_db"
+}
+
+# Glue Crawler
+resource "aws_glue_crawler" "offers_crawler" {
+  name     = "OffersCrawler"
+  role     = "LabRole"  # Must exist in your AWS account
+
+  database_name = aws_glue_catalog_database.offers_db.name
+  table_prefix  = "offers_"
+
+  s3_target {
+    path = "s3://${aws_s3_bucket.offer_archive.bucket}/offers/"
+  }
+
+  schedule {
+    schedule_expression = "cron(0/1 * * * ? *)"  # Every 1 minute
+  }
+
+  configuration = jsonencode({
+    Version = 1.0,
+    CrawlerOutput = {
+      Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
+    }
+  })
+
+  depends_on = [aws_s3_bucket.offer_archive]
+}
