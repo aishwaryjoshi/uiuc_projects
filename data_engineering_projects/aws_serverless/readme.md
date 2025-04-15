@@ -28,3 +28,4 @@ Run the following to deploy:
 ```bash
 terraform init
 terraform apply
+```
