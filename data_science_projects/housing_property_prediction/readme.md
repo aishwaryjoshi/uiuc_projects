@@ -80,7 +80,7 @@ Logs the total time taken to execute the full script, helping in tracking perfor
 ---
 
 ## 🔧 How to Run
-Just run the full R script in RStudio or any R-compatible environment. Make sure you have internet access for loading CSV files directly from GitHub.
+Just run the full R script in RStudio or any R-compatible environment.
 
 ---
 
